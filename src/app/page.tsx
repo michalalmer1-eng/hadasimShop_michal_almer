@@ -27,7 +27,7 @@ export default function Home() {
           image="/images/products/1.jpg"
           title="Classic Cotton Tee"
           description="100% cotton, breathable jersey, relaxed everyday fit."
-          price={79}
+          price={99}
           href="/product/sku-tee-001"
           inv={{ hifa: 6, tlv: 3, eilat: 2 }}
         />
