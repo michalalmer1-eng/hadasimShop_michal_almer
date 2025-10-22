@@ -23,22 +23,7 @@ export default function Home() {
         }}
       >
         {/* 10 clothing cards (update image paths to your actual files) */}
-        <Card
-          image="/images/products/1.jpg"
-          title="Classic Cotton Tee"
-          description="100% cotton, breathable jersey, relaxed everyday fit."
-          price={99}
-          href="/product/sku-tee-001"
-          inv={{ hifa: 6, tlv: 3, eilat: 2 }}
-        />
-        <Card
-          image="/images/products/2.jpg"
-          title="Oversized Hoodie"
-          description="Soft fleece interior, kangaroo pocket, ribbed cuffs."
-          price={189}
-          href="/product/sku-hood-002"
-          inv={{ hifa: 4, tlv: 5, eilat: 1 }}
-        />
+       
         <Card
           image="/images/products/3.jpg"
           title="Slim Fit Jeans"
@@ -46,14 +31,6 @@ export default function Home() {
           price={239}
           href="/product/sku-jeans-003"
           inv={{ hifa: 3, tlv: 4, eilat: 2 }}
-        />
-        <Card
-          image="/images/products/4.jpg"
-          title="Linen Button‑Down Shirt"
-          description="Lightweight linen blend, airy feel, summer essential."
-          price={169}
-          href="/product/sku-shirt-004"
-          inv={{ hifa: 2, tlv: 3, eilat: 2 }}
         />
         <Card
           image="/images/products/5.jpg"
