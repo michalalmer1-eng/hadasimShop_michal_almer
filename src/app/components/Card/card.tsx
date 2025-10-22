@@ -3,17 +3,20 @@
 import { useState, MouseEvent } from "react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import { Heart, Star } from "lucide-react";
+import { Heart } from "lucide-react";
 import styles from "./card.module.css";
 
 export interface CardProps {
-  image: StaticImageData | string; // תומך גם ב-import סטטי וגם במחרוזת
+  image: StaticImageData | string; // supports both static import and string path
   title: string;
   description: string;
-  price: number;            // מחיר ללילה
-  href?: string;            // עמוד פרטים (אופציונלי)
-  rating?: number;          // 4.83 (אופציונלי)
-  locationLabel?: string;   // "ירושלים, ישראל" (אופציונלי)
+  price: number;            // product price
+  href?: string;            // product details page (optional)
+  inv: {                    // inventory per branch
+    hifa: number;           // Haifa
+    tlv: number;            // Tel Aviv
+    eilat: number;          // Eilat
+  };
   onLikeChange?: (liked: boolean) => void;
 }
 
@@ -23,8 +26,7 @@ export default function Card({
   description,
   price,
   href,
-  rating,
-  locationLabel,
+  inv,
   onLikeChange,
 }: CardProps) {
   const [liked, setLiked] = useState(false);
@@ -38,6 +40,8 @@ export default function Card({
       return next;
     });
   };
+
+  const totalStock = (inv?.hifa ?? 0) + (inv?.tlv ?? 0) + (inv?.eilat ?? 0);
 
   const content = (
     <article className={styles.card} role="group" aria-label={title}>
@@ -54,7 +58,7 @@ export default function Card({
           type="button"
           className={`${styles.likeBtn} ${liked ? styles.liked : ""}`}
           aria-pressed={liked}
-          aria-label={liked ? "הסר ממועדפים" : "הוסף למועדפים"}
+          aria-label={liked ? "Remove from favorites" : "Add to favorites"}
           onClick={toggleLike}
         >
           <Heart size={18} />
@@ -64,20 +68,28 @@ export default function Card({
       <div className={styles.info}>
         <div className={styles.rowTop}>
           <h3 className={styles.title} title={title}>{title}</h3>
-
-          {typeof rating === "number" && (
-            <div className={styles.rating} aria-label={`דירוג ${rating}`}>
-              <Star size={14} className={styles.star} />
-              <span>{rating.toFixed(2)}</span>
+          {Number.isFinite(totalStock) && (
+            <div
+              className={styles.stockBadge ?? ""}
+              aria-label={`Stock: total ${totalStock}`}
+              title={`Total stock: ${totalStock}`}
+              style={{ fontSize: 12, opacity: 0.8 }}
+            >
+              {totalStock} in stock
             </div>
           )}
         </div>
 
-        {locationLabel && (
-          <div className={styles.location} title={locationLabel}>
-            {locationLabel}
-          </div>
-        )}
+        {/* Inventory per branch */}
+        <div
+          className={styles.inventory ?? ""}
+          aria-label={`Inventory per branch`}
+          style={{ display: "flex", gap: 12, fontSize: 12, opacity: 0.9 }}
+        >
+          <span title="Haifa">Haifa: {inv?.hifa ?? 0}</span>
+          <span title="Tel Aviv">Tel Aviv: {inv?.tlv ?? 0}</span>
+          <span title="Eilat">Eilat: {inv?.eilat ?? 0}</span>
+        </div>
 
         <p className={styles.description}>{description}</p>
 
@@ -89,7 +101,6 @@ export default function Card({
               maximumFractionDigits: 0,
             }).format(price)}
           </span>
-          <span className={styles.perNight}> ‏ללילה</span>
         </div>
       </div>
     </article>

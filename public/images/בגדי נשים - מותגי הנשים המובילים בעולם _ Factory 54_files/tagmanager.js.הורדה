@@ -1,0 +1,234 @@
+'use strict';
+
+/**
+ * Events are divided up by name space so only the
+ * events that are needed are initialized.
+ */
+var events = {
+	homeshow: function () { },
+	productshow: function () { },
+	searchshow: function () {
+		$('body').on('click', '.product .image-container a:not(.quickview), .product .pdp-link a, .present-product__image-container a, .present-product__tile-body a.link', function () {
+			var gtmdata = $.parseJSON($(this).closest('.product').attr('data-gtmdata'));
+			productClick(gtmdata);
+		});
+	},
+	cartshow: function () { },
+	checkoutbegin: function () { },
+	orderconfirm: function () { },
+	// events that should happen on every page
+	all: function () {
+		// Add to Cart
+		$('body').on('click', '.add-to-cart, .add-to-cart-global', function () {
+			var gmtData = $.parseJSON($(this).attr('data-gtmdata'));
+			var qty = $(this).closest('.product-wrapper').find('.quantity-select').val();
+			addToCart(gmtData, qty);
+		});
+
+		//Remove from Cart
+		$('body').on('click', '.remove-product', function () {
+			var gmtData = $.parseJSON($(this).attr('data-gtmdata'));
+			var qty = $(this).closest('.card').find('select.quantity').val();
+			$('body').on('click', '#removeProductModal .cart-delete-confirmation-btn', function () {
+				removeFromCart(gmtData, qty);
+			});
+		});
+
+		// update GTM data attribute 
+		$('body').on('product:updateAddToCart', function (e, response) {
+			$('button.add-to-cart, button.add-to-cart-global', response.$productContainer).attr('data-gtmdata', JSON.stringify(response.product.gtmData));
+		});
+
+		//Cart checkout button
+		$('.card-cart-page').on('click', '.checkout-btn.checkout-login-modal', function () {
+			signInCheckout();
+		});
+
+		bindValidateCCButton();
+
+		$('#newCreditCardLink').on('click', function(){
+			bindValidateCCButton();
+		});
+
+		$('li.nav-item[data-method-id="PAY_ME_PAYPAL"] a').on('click', function () {
+			checkoutOption('Paypal');
+		});
+		$('li.nav-item[data-method-id="PAY_ME_BIT"] a').on('click', function () {
+			checkoutOption('Bit');
+		});
+	}
+};
+
+function bindValidateCCButton() {
+	if ($('#credit-card-form-container:not([style="display:none"]) #actionButtons .validate').length > 0) {
+		$('#credit-card-form-container:not([style="display:none"]) #actionButtons .validate').on('click', function () {
+			checkoutOption('Credit Card');
+		});
+	}else{
+		setTimeout(() => {
+			bindValidateCCButton();
+		}, 500);
+	}
+}
+
+function addCustomerData(productObject) {
+	var userId = window.customerData && window.customerData.registered ? window.customerData.user_id : '';
+	var dimension3 = window.customerData && window.customerData.registered ? 'registered' : 'guest';
+	productObject.userId = userId;
+	productObject.dimension3 = dimension3;
+	return productObject;
+}
+
+/**
+ * @param {String} productId The product ID
+ * @description gets the data for a product click
+ */
+function productClick(productObject) {
+	var obj = {
+		'event': 'productClick',
+		'ecommerce': {
+			'click': {
+				'actionField': { 'list': 'Search Results' },
+				'products': []
+			}
+		}
+	};
+	obj.ecommerce.click.products.push(productObject);
+	dataLayer.push(obj);
+}
+
+/**
+ * @param productId
+ * @description Click event for add product to cart
+ */
+function addToCart(productObject, quantity) {
+	var quantObj = { 'quantity': quantity },
+		obj = {
+			'event': 'addToCart',
+			'ecommerce': {
+				'add': {
+					'products': []
+				}
+			}
+		};
+	productObject = addCustomerData(productObject);
+	obj.ecommerce.add.products.push($.extend(productObject, quantObj));
+	dataLayer.push(obj);
+}
+
+/**
+ * @function removeFromCart
+ * @description Click event for remove product from cart
+ */
+function removeFromCart(productObject, quantity) {
+	var quantObj = { 'quantity': quantity },
+		obj = {
+			'event': 'removeFromCart',
+			'ecommerce': {
+				'remove': {
+					'products': []
+				}
+			}
+		};
+	productObject = addCustomerData(productObject);
+	obj.ecommerce.remove.products.push($.extend(productObject, quantObj));
+	dataLayer.push(obj);
+}
+
+/**
+ * @function signInCheckout
+ * @description Click event for modal popup sign in checkout
+ */
+function signInCheckout() {
+	if (window.dataLayer) {
+		var dlproducts = window.dataLayer[0].ecommerce.products;
+		var products = [];
+
+		dlproducts.forEach(function (prod) {
+			products.push(addCustomerData(prod));
+		});
+
+		var obj = {
+			'event': 'checkout',
+			'ecommerce': {
+				'signin': {
+					'actionField': { 'step': 1 },
+					'products': products
+				}
+			}
+		};
+
+		dataLayer.push(obj);
+	}
+}
+
+function checkoutOption(paymentMethod) {
+	var obj = {
+		'event': 'checkoutOption',
+		'ecommerce': {
+			'checkout_option': {
+				'actionField': { 'step': 3, 'option': paymentMethod }
+			}
+		}
+	};
+
+	dataLayer.push(obj);
+}
+
+/**
+ * @function pushEvent
+ * @description Convenience method for creating a click event.
+ * @param {String} event
+ * @param {String} eventCategory
+ * @param {String} eventAction
+ * @param {String} eventlabel
+ */
+function pushEvent(event, eventCategory, eventAction, eventLabel) {
+	dataLayer.push({
+		'event': event,
+		'eventCategory': eventCategory,
+		'eventAction': eventAction,
+		'eventLabel': eventLabel
+	});
+}
+
+/**
+ * @function init
+ * @description Initialize the tag manager functionality
+ * @param {String} nameSpace The current name space
+ */
+$(document).ready(function () {
+	if (pageAction && events[pageAction]) {
+		events[pageAction]();
+	}
+	events.all();
+});
+
+/**
+ * listener for ajax events
+ */
+function gtmEventLoader() {
+	try {
+		$(document).ajaxSuccess(function (event, request, settings, data) {
+			if (settings.dataTypes.indexOf('json') > -1) {
+				if (data && '__gtmEvents' in data && Array.isArray(data.__gtmEvents)) {
+					data.__gtmEvents.forEach(function gtmEvent(gtmEvent) {
+						if (gtmEvent) { dataLayer.push(gtmEvent) }
+					});
+				}
+			}
+		});
+		document.removeEventListener('DOMContentLoaded', gtmEventLoader);
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+/**
+ * setup ajax event listener
+ */
+if (document.readyState === 'complete') {
+	gtmEventLoader();
+} else {
+	document.addEventListener('DOMContentLoaded', gtmEventLoader);
+}
