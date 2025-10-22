@@ -1,60 +1,53 @@
-/* בסיס */
+/* Container */
 .header {
   position: sticky;
   top: 0;
   z-index: 50;
   background: #fff;
-  backdrop-filter: saturate(180%) blur(12px);
-  border-bottom: 1px solid #eee;
-  padding: 12px 24px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 10px 40px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  direction: rtl; 
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
 }
 
+/* Logo */
 .logo {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  color: #ff385c;
   text-decoration: none;
 }
-.belo {
-  width: 28px;
-  height: 28px;
-}
-.brand {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.2px;
-  text-transform: lowercase;
+.logoImg {
+  display: block;
+  height: 40px;
+  width: auto;
 }
 
+/* Search pill */
 .searchPill {
-  justify-self: center;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 8px 8px 8px;
+  gap: 10px;
+  padding: 6px 12px;
   border: 1px solid #ddd;
   border-radius: 999px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
   background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 .segment,
 .segmentMuted {
   background: transparent;
-  border: 0;
+  border: none;
   font-size: 14px;
-  padding: 4px 10px;
+  padding: 6px 10px;
   border-radius: 999px;
   cursor: pointer;
+  color: #333;
 }
-.segment:hover { background: #f7f7f7; }
-.segmentMuted { color: #6b6b6b; }
-.dot { color: #d0d0d0; user-select: none; }
+.segment:hover { background: #f3f4f6; }
+.segmentMuted { color: #6b7280; }
+.dot { color: #d1d5db; user-select: none; }
 
 .searchBtn {
   display: inline-flex;
@@ -65,72 +58,70 @@
   border-radius: 50%;
   border: 0;
   cursor: pointer;
-  color: white;
-  background: #ff385c;
-  transition: transform .08s ease;
+  color: #fff;
+  background: #111827;
+  transition: transform .08s ease, box-shadow .15s ease;
+  box-shadow: 0 6px 16px rgba(17,24,39,.20);
 }
 .searchBtn:active { transform: scale(0.96); }
 
-/* ניווט ימני */
+/* Right nav */
 .nav {
-  justify-self: end;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 10px;
 }
-.hostLink {
-  padding: 10px 12px;
-  border-radius: 999px;
-  text-decoration: none;
-  color: #222;
-  font-size: 14px;
-}
-.hostLink:hover { background: #f7f7f7; }
-
 .iconBtn {
   border: 0;
-  background: transparent;
-  border-radius: 999px;
+  background: #fff;
+  border-radius: 12px;
   padding: 8px;
   cursor: pointer;
+  color: #111827;
 }
-.iconBtn:hover { background: #f7f7f7; }
+.iconBtn:hover { background: #f3f4f6; }
+
+.signupBtn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  background: #111827;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(17,24,39,.20);
+}
+.signupBtn:hover { filter: brightness(1.05); }
 
 .profileBtn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 8px;
-  border-radius: 999px;
-  border: 1px solid #ddd;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
   background: #fff;
   cursor: pointer;
-  transition: box-shadow .15s ease;
+  transition: box-shadow .15s ease, transform .05s ease;
 }
-.profileBtn:hover { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
-.userIcon { color: #6a6a6a; }
+.profileBtn:hover { box-shadow: 0 2px 10px rgba(0,0,0,.08); }
 
-/* פוקוס נגיש */
+/* Focus */
 .segment:focus,
 .segmentMuted:focus,
 .iconBtn:focus,
 .profileBtn:focus,
 .searchBtn:focus,
-.hostLink:focus {
-  outline: 2px solid #ff385c;
+.signupBtn:focus,
+.logo:focus {
+  outline: 2px solid #111827;
   outline-offset: 2px;
 }
 
+/* Responsive */
 @media (max-width: 900px) {
-  .brand { display: none; }
   .searchPill { gap: 6px; }
   .segment { padding: 4px 8px; font-size: 13px; }
 }
 @media (max-width: 680px) {
-  .header { grid-template-columns: auto 1fr auto; }
-  .segment:nth-of-type(1),
-  .dot:nth-of-type(1),
-  .segment:nth-of-type(2),
-  .dot:nth-of-type(2) { display: none; } /* מצמצם ל"הוסיפו אורחים" + כפתור */
-  .searchPill { padding-inline: 6px; }
+  .searchPill { display: none; } /* מחביאים את החיפוש במסכים קטנים */
 }

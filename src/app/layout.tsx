@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/app/components/Header/Header";
-import Footer from "@/app/components/Footer/Footer"; // ← הוספנו את הפוטר
+import Footer from "@/app/components/Footer/Footer";
 
 export const metadata: Metadata = {
-  title: "Airbnb Clone",
-  description: "A demo project built with Next.js and TypeScript",
+  title: "Hadasim Boutique",
+  description: "Modern clothing store built with Next.js",
 };
 
 export default function RootLayout({
@@ -14,11 +14,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="he" dir="rtl">
+    <html lang="en" dir="ltr">
       <body>
         <Header />
         {children}
-        <Footer /> {/* ← כאן יופיע הכפתור “צור קשר” שפותח את הטופס */}
+        <Footer />
       </body>
     </html>
   );

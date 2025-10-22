@@ -26,7 +26,6 @@
 }
 .image { object-fit: cover; inset: 0; }
 
-/* כפתור לב */
 .likeBtn {
   position: absolute;
   top: 10px;
@@ -46,7 +45,6 @@
 .likeBtn:active { transform: scale(.96); }
 .liked svg { fill: #ff385c; stroke: #ff385c; }
 
-/* טקסטים */
 .info { padding: 6px 4px 14px; margin-inline: 8px; display: grid; gap: 4px; }
 
 .rowTop {
