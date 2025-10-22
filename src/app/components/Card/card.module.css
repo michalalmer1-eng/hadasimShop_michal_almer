@@ -1,0 +1,107 @@
+:root { color-scheme: light; }
+
+.linkWrap { text-decoration: none; color: inherit; }
+
+.card {
+  direction: rtl;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  transition: box-shadow .16s ease, transform .12s ease;
+  cursor: pointer;
+}
+.card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.08); transform: translateY(-1px); }
+
+/* תמונה – יחס 3:2 */
+.media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.image { object-fit: cover; inset: 0; }
+
+/* כפתור לב */
+.likeBtn {
+  position: absolute;
+  top: 10px;
+  left: 10px; /* RTL */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  transition: background .12s ease, transform .08s ease;
+}
+.likeBtn:hover { background: #fff; }
+.likeBtn:active { transform: scale(.96); }
+.liked svg { fill: #ff385c; stroke: #ff385c; }
+
+/* טקסטים */
+.info { padding: 6px 4px 14px; margin-inline: 8px; display: grid; gap: 4px; }
+
+.rowTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #222;
+}
+.star { color: #222; }
+
+.location {
+  font-size: 13px;
+  color: #6a6a6a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.description {
+  font-size: 13px;
+  color: #6a6a6a;
+  line-height: 1.35;
+  min-height: 1.35em;
+}
+
+.priceLine {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 2px;
+}
+.priceVal { color: #222; font-weight: 800; }
+.perNight { color: #6a6a6a; }
+
+/* מובייל */
+@media (max-width: 520px) {
+  .title { font-size: 14px; }
+  .rating { font-size: 12px; }
+  .description { font-size: 12px; }
+}
